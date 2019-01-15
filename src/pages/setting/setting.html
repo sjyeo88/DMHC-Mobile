@@ -1,0 +1,34 @@
+<!--
+  Generated template for the SettingPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>앱 설정</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <button ion-item (tap)="onPersonalPage()">계정정보 확인 및 변경</button>
+    <!-- <button ion-item >사용방법</button> -->
+    <ion-item>
+      <ion-label>전체 과제 알림 On/Off</ion-label>
+      <ion-toggle [(ngModel)]="isNotificaiton" (ionChange)="togglePushNotification()"></ion-toggle>
+    </ion-item>
+    <!-- <button ion-item ></button> -->
+    <button ion-item (tap)="onMoveUsecase()" >서비스 이용약관</button>
+    <button ion-item (tap)="onMovePersonInfo()" >개인정보처리 방침</button>
+    <button ion-item (tap)="onMoveAbout()">About</button>
+    <button ion-item (tap)="onLogOut()">로그아웃</button>
+    <button ion-item (tap)="confirmSignOut()">계정탈퇴</button>
+  </ion-list>
+  <!-- <ion-item>
+    <ion-label>로그아웃</ion-label>
+  </ion-item> -->
+</ion-content>

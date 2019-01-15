@@ -1,0 +1,38 @@
+page-access-term {
+  text-align: center;
+
+  .description {
+    margin-top: 5vh;
+    text-align: left;
+    font-size: 9pt;
+  }
+
+  .all-agree {
+    margin-top: 5vh;
+  }
+  .each-agree {
+  }
+
+  .detail-button {
+    float: right;
+    font-size: 10pt;
+    padding: .3em;
+    margin: 0;
+    margin-top: 2px;
+    // width: 1em;
+    height: 100%;
+  }
+  .submit-button {
+    margin-top: 30vh;
+    width: 80vw;
+  }
+  .red-hr {
+    height: 2px;
+    background-color: color($colors, crimson);
+  }
+  .hr {
+    height: 1px;
+    background-color: color($colors, gray_light);
+  }
+
+}

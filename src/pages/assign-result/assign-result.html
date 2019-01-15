@@ -1,0 +1,125 @@
+<!--
+  Generated template for the AssignResultPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>전체 과제결과</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="assign-result">
+  <ion-card class="result-card-all">
+    <ion-card-header class="result-header">전체 과제 결과</ion-card-header>
+    <ion-card-content class="result-content">
+      <ion-row>
+        <ion-col class="number">
+          <div class="text-with-icon">
+            <ion-icon name="custom-smile" [style.zoom]="1.7"></ion-icon>
+            <div>수행 과제 <br><span>{{ this.totalResult.fin }}개</span></div>
+          </div>
+          <hr>
+          <div class="text-with-icon">
+            <ion-icon name="custom-serious" [style.zoom]="1.6"></ion-icon>
+            <div>미수행 과제 <br><span>{{ this.totalResult.unfin }}개</span></div>
+          </div>
+        </ion-col>
+        <ion-col class="ratio">
+          <li>과제수행률</li>
+          <br>
+          <li><span class="percentage">{{ this.totalResult.ratio | number: '1.0-1' }}</span>%</li>
+        </ion-col>
+      </ion-row>
+      <hr [style.height.px]="1.2">
+      <ion-row>
+        <ion-col class="number">
+          <div class="text-with-icon">
+            <ion-icon name="custom-love" [style.zoom]="1.7"></ion-icon>
+            <div>과제 완료일 <br><span>{{ this.totalResult.finDate }}일</span></div>
+          </div>
+          <hr>
+          <div class="text-with-icon">
+            <ion-icon name="custom-crying" [style.zoom]="1.6"></ion-icon>
+            <div>미 완료일<br><span>{{ this.totalResult.unfinDate }}일</span></div>
+          </div>
+        </ion-col>
+        <ion-col class="ratio">
+          <li>일일 달성률</li>
+          <br>
+          <li><span class="percentage">{{ this.totalResult.dateRatio | number: '1.0-1' }}</span>%</li>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="result-card-monthly">
+    <ion-card-header class="result-header">
+      <button type="button" class="custom-style move-month" (tap)="prevMonth()">
+       <ion-icon name="arrow-back"></ion-icon>
+      </button>
+      <span>{{ this.today.getFullYear() }}년 {{ this.today.getMonth() +1 }}월 과제 결과</span>
+      <button type="button" class="custom-style move-month" (tap)="nextMonth()">
+         <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    </ion-card-header>
+    <ion-card-content class="result-content">
+      <ion-row>
+        <ion-col class="number">
+          <div class="text-with-icon">
+            <ion-icon name="custom-smile" [style.zoom]="1.7"></ion-icon>
+            <div>수행 과제 <br><span>{{ this.monthResult.fin }}개</span></div>
+          </div>
+          <hr>
+          <div class="text-with-icon">
+            <ion-icon name="custom-serious" [style.zoom]="1.6"></ion-icon>
+            <div>미수행 과제 <br><span>{{ this.monthResult.unfin }}개</span></div>
+          </div>
+        </ion-col>
+        <ion-col class="ratio">
+          <li>과제수행률</li>
+          <br>
+          <li><span class="percentage">{{ this.monthResult.ratio | number: '1.0-1' }}</span>%</li>
+        </ion-col>
+      </ion-row>
+      <hr [style.height.px]="1.2">
+      <ion-row>
+        <ion-col class="number">
+          <div class="text-with-icon">
+            <ion-icon name="custom-love" [style.zoom]="1.7"></ion-icon>
+            <div>과제 완료일 <br><span>{{ this.monthResult.finDate }}일</span></div>
+          </div>
+          <hr>
+          <div class="text-with-icon">
+            <ion-icon name="custom-crying" [style.zoom]="1.6"></ion-icon>
+            <div>미 완료일<br><span>{{ this.monthResult.unfinDate }}일</span></div>
+          </div>
+        </ion-col>
+        <ion-col class="ratio">
+          <li>일일 달성률</li>
+          <br>
+          <li><span class="percentage">{{ this.monthResult.dateRatio | number: '1.0-1' }}</span>%</li>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="result-card-survey">
+    <ion-card-header class="result-header">
+    <button type="button" class="custom-style move-month" (tap)="prevSurveyMonth()">
+       <ion-icon name="arrow-back"></ion-icon>
+      </button>
+      <span>{{ this.surveyToday.getFullYear() }}년 설문 결과</span>
+      <button type="button" class="custom-style move-month" (tap)="nextSurveyMonth()">
+         <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    </ion-card-header>
+    <ion-card-content  class="result-content">
+      <canvas class="survey-chart" #surveyCanvas height="300"></canvas>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

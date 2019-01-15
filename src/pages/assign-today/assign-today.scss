@@ -1,0 +1,277 @@
+page-assign-today {
+
+  .header {
+    position: relative !important;
+    .toolbar-background-ios,
+    .toolbar-background-md {
+      background-color: white;
+    }
+  }
+
+  .dates {
+    float: right;
+  }
+
+  .month-selector {
+    background-color: white !important;
+    height: auto;
+    z-index: 2002;
+    padding: 5px;
+    border-top: 2px solid color($colors, gray_bright);
+    border-bottom: 2px solid color($colors, gray_bright);
+    box-shadow: none;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+
+    .month-text {
+      margin: 0 30px;
+      vertical-align: 5%;
+    }
+
+    .view-calander {
+      position: absolute;
+      height: 28px;
+      width: 28px;
+      right: 5px;
+      display: inline-block;
+      padding: 0 5px;
+
+      ion-icon {
+        top: 0;
+        left: 0;
+      }
+    }
+    .move-month {
+      padding: 0 20px;
+    }
+  }
+
+  .check-area {
+    position: absolute;
+    display: inline-block;
+    z-index: 2001;
+    left: calc(50vw - 60px);
+    width: 120px;
+    height: 60px;
+    border: 1px solid black;
+  }
+  .date-picker {
+    position: relative !important;
+  }
+
+  ion-scroll[scrollX] {
+    transition: height 0.1s;
+    text-align: center;
+    // top: 96px;
+    left: 0;
+    z-index: 2000;
+    width: 100vw;
+    white-space: nowrap;
+    height: 100px;
+    overflow: hidden;
+    background-color: white;
+
+    .scroll-content {
+      height: 100px !important;
+    }
+
+    @mixin scroll-item-mix($background-color) {
+      position: relative;
+      display: inline-block;
+      padding: 0 10px;
+      margin-top: 15px;
+      font-size: 12px;
+
+      .date {
+        margin: 5px 0;
+        display: inline-block;
+        line-height: 42px;
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        background-color: $background-color;
+        border-radius: 25px;
+      }
+
+      .today {
+        color: color($colors, gold);
+        position: absolute;
+        font-size: 12pt;
+        font-weight: bold;
+        right: 5px;
+      }
+    }
+
+    .date-scroll-item {
+      @include scroll-item-mix(white);
+      .date {
+        border: 1px solid color($colors, gray_darken);
+      }
+      // transition: transform 0.2s;
+    }
+
+    .date-scroll-item-selected {
+      @include scroll-item-mix(color($colors, bluish_green));
+      transform: scale(1.3);
+      // zoom: 1.2;
+      .date {
+        color: white;
+      //   border: 0px solid color($colors, bluish_green);
+      }
+    }
+  }
+
+  .calendar {
+    position: absolute;
+    // left: (100vw - 90vw)/2;
+    top: 120px;
+    max-height: calc(100vh - 110px);
+    width: 99vw;
+    height: 90vw;
+    visibility: visible;
+    z-index: 2002;
+    padding: 10px;
+    background-color: white;
+
+    table {
+      width:100%;
+      position: relative;
+      font-weight: bold;
+
+      th {
+        padding: 3% 0;
+      };
+
+      tr {
+        height: 10%;
+      }
+
+      td {
+        text-align: center;
+        button {
+          text-align: center;
+          padding-top : 5px;
+          width: 100%;
+          margin: 2px;
+        }
+        .today {
+          border-radius: 5px;
+          border: 2px solid color($colors, gold);
+        }
+        .selected {
+          border-radius: 5px;
+          background-color: color($colors, bluish_green-blur);
+        }
+        // padding-bottom: 2%;
+      }
+      width: 100%;
+      // height: 100%;
+    }
+    box-shadow: 0 0 3px 3px color($colors, gray_light);
+    transition: opacity 0.8s, visibility 0.8s;
+  }
+
+  .fade-calendar {
+    @extend .calendar;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.5s;
+    opacity: 0;
+  }
+  .shrink {
+    height: 0 !important;
+    transition: height 0.1s;
+  }
+
+  .assign-today {
+    position: relative !important;
+    background-color: color($colors, gray_bright);
+
+    .loader {
+      text-align: center;
+      ion-spinner * {
+        fill: color($colors, light_blue);
+        margin-top: 60%;
+      }
+    }
+
+    .scroll-content {
+      margin-top: 0 !important;
+      padding-bottom: 120px !important;
+    }
+    .card-not-assigned {
+      .header {
+        background-color: color($colors, vermilion);
+        ion-label {
+          margin: 5px ;
+        }
+        .title {
+          font-weight: bold;
+          font-size:14pt;
+          color: white;
+        }
+        .push-date {
+          text-align: right;
+          float:right;
+          font-size:10pt;
+          color: white;
+        }
+      }
+      .content {
+        padding: 15px;
+        .subscribe {
+          float: right;
+          text-align: right;
+        }
+      }
+
+      .command {
+        padding: 10px;
+        position: relative;
+        border-radius: 10px;
+        border:2px solid color($colors, gray_mid);
+        background-color: white;
+      }
+      @mixin command-triangle {
+        position: absolute;
+        content: '';
+        width: 0px;
+        height: 0px;
+        border-bottom: 20px solid color($colors, gray_mid);
+        border-top: 10px solid transparent;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        left: 30px;
+        top: -30px;
+        display: inline-block;
+      }
+      .command:before {
+        @include command-triangle;
+      }
+      .command:after {
+        @include command-triangle;
+        border-bottom: 20px solid white;
+        top: -25px;
+      }
+      .card-ctrl {
+        border-top: 1px solid color($colors, gray_light);
+        text-align: center;
+      }
+    }
+
+    .card-assigned {
+      @extend .card-not-assigned;
+      .header {
+        background-color:  color($colors, bluish_green);
+      }
+
+    }
+    .no-assign {
+      text-align: center;
+      padding: 35px;
+      font-szie: 18px;
+      font-weight: bold;
+    }
+  }
+}

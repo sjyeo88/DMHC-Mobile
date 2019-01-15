@@ -1,0 +1,7 @@
+ionic cordova plugin add cordova-plugin-screen-orientation
+ionic cordova plugin add cordova-plugin-tts
+ionic cordova plugin add cordova-plugin-taptic-engine 
+ionic cordova plugin add cordova-plugin-vibration 
+ionic cordova plugin add cordova-plugin-camera 
+ionic cordova plugin add cordova-plugin-fcm 
+

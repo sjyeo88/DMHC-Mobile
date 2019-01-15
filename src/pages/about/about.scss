@@ -1,0 +1,24 @@
+page-about {
+  text-align: center;
+  .footer {
+    position: absolute;
+    left: calc((100% - 231px)/2);
+    bottom: 10px;
+  }
+
+
+  .logo {
+    margin-top: 20%;
+  }
+
+  .contact {
+    margin-top: 20%;
+    display: inline-block;
+  }
+
+  li {
+    text-align: left;
+    font-size: 8pt;
+    list-style: none;
+  }
+}

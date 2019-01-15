@@ -1,0 +1,186 @@
+page-assign {
+  .back {
+    background-color: color($colors, 'gray_bright');
+
+  }
+  .card-not-assigned {
+    width: 100%;
+    position: relative !important;
+    padding-bottom: 55px;
+    margin: 0px;
+    margin-top: 10px;
+    overflow: visible !important;
+    // max-height: calc(100vh - 64px + 50px);
+    .header {
+      position: relative;
+      background-color: color($colors, vermilion);
+      padding: 5px 10px;
+      .title {
+        font-weight: bold;
+        font-size:14pt;
+        color: white;
+      }
+      .push-date {
+        display: inline-block;
+        text-align: right;
+        float:right;
+        font-size:10pt;
+        color: white;
+      }
+    }
+    .content {
+
+      padding: 15px;
+      .subscribe {
+        float: right;
+        text-align: right;
+      }
+      .survey {
+        .title {
+          text-align: center;
+          font-size: 20pt;
+          padding: 10px;
+        }
+        .obj {
+          position: relative;
+          border-top:2px solid color($colors, gray_mid);
+          padding: 10px;
+          text-align: center;
+          .text {
+            text-align: left;
+          }
+          .value-text {
+            padding: 5px 10px;
+            background-color: color($colors, primary);
+            color: white;
+            border-radius: 3px;
+          }
+          .pick-label {
+            bottom: 10px;
+            width: 95%;
+            td {
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+
+    .command {
+      padding: 10px;
+      position: relative;
+      border-radius: 10px;
+      border:2px solid color($colors, gray_mid);
+      background-color: white;
+      padding: 10px;
+    }
+
+    .answer {
+      position: relative;
+      .title {
+        text-align: left;
+        font-size: 15pt;
+        padding-bottom: 10px;
+        border-bottom: 1px solid  color($colors, gray_mid);
+      }
+      padding: 10px;
+      border-radius: 10px;
+      border:2px solid color($colors, gray_mid);
+      background-color: white;
+      margin-bottom: 5px;
+
+      .table-header {
+        background-color: color($colors, bluish_green);
+        color: white;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+      }
+      .table-label {
+        background-color: color($colors, bluish_green-blur);
+        text-align: center;
+        padding: 0 !important;
+      }
+      .table-row {
+        border-bottom:1px solid color($colors, gray_mid);
+      }
+      .table-select {
+        max-width:100% !important;
+      }
+      .select-ios,
+      .select-md {
+        padding: 0 !important;
+      }
+      .text-input-ios,
+      .text-input-md {
+        margin: 0 !important;
+      }
+      .add-picture-button {
+        float: right;
+        padding: 5px;
+        border: 1px solid color($colors, gray_light);
+        background-color: color($colors, gray_bright);
+        border-radius: 5px;
+      }
+
+    }
+    .photo {
+      text-align: center;
+      padding:5px;
+      min-height: 44px;
+      .spinner {
+        text-align: center;
+      }
+      #assign-img {
+        margin-top: 10px;
+        width:100%;
+      }
+    }
+    @mixin command-triangle {
+      position: absolute;
+      content: '';
+      width: 0px;
+      height: 0px;
+      border-bottom: 20px solid color($colors, gray_mid);
+      border-top: 10px solid transparent;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      left: 30px;
+      top: -30px;
+      display: inline-block;
+    }
+    .command:before {
+      @include command-triangle;
+    }
+    .command:after {
+      @include command-triangle;
+      border-bottom: 20px solid white;
+      top: -25px;
+    }
+    .card-ctrl {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      border-top: 1px solid color($colors, gray_light);
+      border-bottom: 1px solid color($colors, gray_light);
+      text-align: center;
+    }
+    .test2 {
+      display: inline-block;
+      text-align: left;
+      padding-bottom: 40px;
+      position: relative;
+      z-index: -1;
+      img {
+        display:inline-block;
+      }
+    }
+  }
+
+  .card-assigned {
+    @extend .card-not-assigned;
+    .header {
+      background-color:  color($colors, bluish_green);
+    }
+
+    }
+}

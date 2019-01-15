@@ -1,0 +1,381 @@
+import { Component, ViewChild, ElementRef, } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/pairwise';
+import { ScreenOrientation } from '@ionic-native/screen-orientation'
+import { TextToSpeech } from '@ionic-native/text-to-speech';
+import { AppServices } from '../../services/app.services';
+import { AssignModel } from './assign-today.model';
+import { AssignPage } from '../assign/assign';
+
+import { TapticEngine } from '@ionic-native/taptic-engine';
+import { Vibration } from '@ionic-native/vibration';
+
+/**
+ * Generated class for the AssignTodayPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+
+@IonicPage()
+@Component({
+  selector: 'page-assign-today',
+  templateUrl: 'assign-today.html',
+})
+export class AssignTodayPage {
+  @ViewChild('date_scroll') dateScroll;
+  @ViewChild('assign_content') assignContent;
+
+  public now = new Date();
+  public cuDate = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate());
+  public today = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate());
+  public lastCuDate = this.cuDate;
+  public dates:Date[] = [];
+  public dateScrollRef:ElementRef;
+  public assignContentRef:ElementRef;
+  public lastAssignContentScroll:number = 0;
+  public assignLoaded = false;
+
+  private dateScroll$;
+  private assignContent$;
+  public lastDateScrollWidth:number;
+  public scrollCheck:boolean = true;
+
+  public isViewCalendar:boolean = false;
+  public isDatePicker:boolean = true;
+
+  public rotObserverble
+
+
+  public todayAssigns:AssignModel[] = [];
+  public calendarModel = [
+    new Array(6),
+    new Array(6),
+    new Array(6),
+    new Array(6),
+    new Array(6),
+    new Array(6),
+  ]
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public scrRot: ScreenOrientation,
+    public platform: Platform,
+    public serv: AppServices,
+    public tts: TextToSpeech,
+    public tte: TapticEngine,
+    public vibe: Vibration,
+  ) {
+  }
+
+  ionViewDidLoad() {}
+
+  ionViewDidLeave() {
+    this.rotObserverble.unsubscribe();
+    this.assignContent$.unsubscribe();
+    this.dateScroll$.unsubscribe();
+  }
+
+  ionViewDidEnter() {
+    this.dateScrollRef = this.dateScroll._scrollContent.nativeElement;
+    this.assignContentRef = this.assignContent._scrollContent.nativeElement;
+    this.createCalendar(this.cuDate)
+    .then(dates=>{
+      this.dates = dates;
+    })
+    .then(()=>{
+      this.setCuDate(this.cuDate);
+    })
+
+    let centerArea0:number;
+    let centerArea1:number;
+    // let lastCenterElem;
+
+    this.rotObserverble = this.scrRot.onChange()
+    .debounceTime(100)
+    .subscribe(()=>{
+      this.setCuDate(this.cuDate);
+    })
+
+    // console.log(this.dateScrollReft);
+    this.assignContent$ = Observable.fromEvent((this.assignContentRef as any), "scroll")
+    .subscribe(data=>{
+      this.lastAssignContentScroll = (data as any).srcElement.scrollTop;
+      if(this.lastAssignContentScroll <= 10) {
+        this.isDatePicker = true;
+      } else {
+        this.isDatePicker = false;
+      }
+    })
+
+    this.dateScroll$ = Observable.fromEvent(this.dateScrollRef as any, "scroll")
+    .subscribe(data=> {
+      let srcElem = (data as Event).srcElement;
+      // console.log(data);
+
+      centerArea0 = this.platform.width()*0.5-64;
+      centerArea1 = this.platform.width()*0.5+64;
+
+      if(this.scrollCheck) {
+        this.lastDateScrollWidth = srcElem.scrollWidth; this.scrollCheck=false;
+      };
+
+      let datesElems = Array.from(srcElem.children[0].children);
+      let centerElem = (datesElems as any).filter(obj=>{
+        obj.className = 'date-scroll-item'
+        // console.log(centerArea0, obj.offsetLeft - srcElem.scrollLeft, obj.offsetLeft - srcElem.scrollLeft + 60 ,centerArea1);
+        return (obj.offsetLeft - srcElem.scrollLeft) > centerArea0 && centerArea1 > (obj.offsetLeft - srcElem.scrollLeft + 60)
+      })[0];
+
+      centerElem.className = centerElem ?  "date-scroll-item-selected" : "date-scroll-item";
+      this.cuDate = centerElem ? this.dates[datesElems.indexOf(centerElem)] : null;
+    })
+
+    this.dateScroll$ = Observable.fromEvent(this.dateScrollRef as any, "scroll")
+    .debounceTime(300)
+    .subscribe(()=>{
+      if(this.lastCuDate.getTime() !== this.cuDate.getTime()) {
+        this.lastCuDate = this.cuDate;
+        this.setCuDate(this.cuDate);
+        if(this.platform.is('ios')) {
+              // this.tte.selection();
+              this.tte.impact({style:'medium'});
+          } else if(this.platform.is('android')){
+            this.vibe.vibrate(100);
+        }
+      }
+    })
+  }
+
+  setCuDate(date:Date) {
+   this.assignLoaded = false;
+   let tgtDate = this.dates.filter(obj=>{
+      return obj.getTime() === date.getTime();
+    })[0];
+    let dateIndex = this.dates.indexOf(tgtDate)
+    // let cuDateElem = (this.dateScrollRef as any).children[0].children.item(0);
+    setTimeout(()=>{
+      let cuDateElem = (this.dateScrollRef as any).children[0].children.item(dateIndex);
+      // let srcElem = this.assignScroll._scrollContent.nativeElement
+      (this.dateScrollRef as any).scrollLeft = 1;
+      (this.dateScrollRef as any).scrollLeft = cuDateElem.offsetLeft-this.platform.width()*0.5+30, 0;
+      this.getAssignByDate(this.cuDate);
+    }, 0)
+    setTimeout(()=>{
+      if(this.navParams.get('scroll')) {
+        let srcElem = this.assignContent._scrollContent.nativeElement;
+        srcElem.scrollTop=this.lastAssignContentScroll;
+      }
+    }, 10)
+  }
+
+
+
+  createCalendar(cuDate):Promise<Date[]> {
+    return new Promise((resolve) => {
+      let year = cuDate.getFullYear();
+      let month = cuDate.getMonth();
+      let firstDate = new Date(year, month, 1);
+      let lastDate = new Date(year, month+1, 0);
+      let dates = [];
+
+
+      let headDate = -1*(firstDate.getDay()-1)
+
+      this.serv.getAssignResult()
+      .then(data=> {
+          return data.map(obj=>{
+            let dateArray = obj.date.toString().split('-')
+            obj.date = new Date(dateArray[0], dateArray[1]-1, dateArray[2]);
+            return obj
+          });
+      })
+      .then(result=>{
+        for(let i=0; i < 6; i++){
+          for(let j=0; j < 7; j++) {
+            let date = new Date(year, month, headDate);
+            let resultByDate = result.filter(obj=>{
+              return obj.date.toString() === date.toString()
+            })[0]
+            this.calendarModel[i][j] = {
+              date: date,
+              valid: headDate < 1 || headDate > lastDate.getDate() ? false : true,
+              finished: undefined,
+            }
+            if(resultByDate) {
+              let finish = resultByDate.date_unfin > 0 ? false : true ;
+              console.log(finish);
+              this.calendarModel[i][j].finished = finish;
+            }
+            headDate++;
+          }
+        }
+      })
+
+
+      // let prevMonthN = new Date(cuDate.getFullYear(), cuDate.getMonth(), 0).getDate();
+      let cuMonthN = new Date(cuDate.getFullYear(), cuDate.getMonth()+1, 0).getDate();
+      // let nextMonthN = new Date(cuDate.getFullYear(), cuDate.getMonth()+2, 0).getDate();
+
+      for(let i = -2; i <= cuMonthN + 3; i++) {
+        dates.push(new Date(cuDate.getFullYear(), cuDate.getMonth(), i));
+      }
+
+      resolve(dates);
+    })
+  }
+
+  getDayString(day) {
+    switch(day) {
+      case 0:
+        return '일';
+      case 1:
+        return '월';
+      case 2:
+        return '화';
+      case 3:
+        return '수';
+      case 4:
+        return '목';
+      case 5:
+        return '금';
+      case 6:
+        return '토';
+    }
+  }
+
+  getDayColor(day) {
+    switch(day) {
+      case 0:
+        return 'red';
+      case 6:
+        return '#0959c4';
+      default:
+        return 'black';
+    }
+  }
+
+  viewCalendar() {
+
+
+    this.isViewCalendar = this.isViewCalendar ? false : true;
+  }
+
+  nextMonth() {
+    let tgtDate = new Date(this.cuDate.getFullYear(), this.cuDate.getMonth()+1, 1);
+    // if(this.cuDate.getMonth()+2 === tgtDate.getMonth()) {
+    //   tgtDate = new Date(this.cuDate.getFullYear(), this.cuDate.getMonth() + 2, 0);
+    // }
+    this.cuDate = tgtDate;
+    this.createCalendar(tgtDate)
+    .then(dates =>{
+      this.dates = dates;
+    })
+    .then(()=>{
+      this.setCuDate(tgtDate);
+    })
+  }
+
+  prevMonth() {
+    let tgtDate = new Date(this.cuDate.getFullYear(), this.cuDate.getMonth(), 0);
+    // if(this.cuDate.getMonth() === tgtDate.getMonth()) {
+    //   tgtDate = new Date(this.cuDate.getFullYear(), this.cuDate.getMonth(), 0);
+    // }
+    this.cuDate = tgtDate;
+    this.createCalendar(tgtDate)
+    .then(dates =>{
+      this.dates = dates;
+    })
+    .then(()=>{
+      this.setCuDate(tgtDate);
+    })
+  }
+
+  getAssignByDate(date:Date) {
+    this.todayAssigns = [];
+    this.serv.getAssignByDate(date)
+    .then(data=>{
+      data.forEach(obj=>{
+        let dateObj = new Date(obj.PUSH_TIME)
+        // let date = new Date(dateObj.getTime() + (9*1000*3600));
+        let fdateObj = new Date(obj.FINISHED_TIME)
+        // let fdate = new Date(fdateObj.getTime() + (9*1000*3600));
+        this.todayAssigns.push({
+          idSBJTS: obj.idSBJTS,
+          idSB_SBJT_CONF: obj.idSB_SBJT_CONF,
+          status: obj.status,
+          command: obj.command,
+          record_input: obj.record_input,
+          PUSH_TIME: dateObj,
+          repush: obj.repush,
+          result: obj.result,
+          FINISHED_TIME: fdateObj,
+          type: obj.type,
+          scroll: 0,
+        })
+      })
+      this.assignLoaded = true;
+    })
+    .catch(msg=>{
+      this.serv.msgServ(msg);
+    })
+
+  }
+
+  getElaspedDate(date:Date) {
+    let elaspedDate = Math.floor((this.today.getTime() - date.getTime())/(1000*3600*24)) + 1;
+    switch(elaspedDate) {
+      case 0:
+        return {icon:'custom-smile', msg:'오늘의 과제입니다'};
+      case 1:
+        return {icon:'custom-hesitate', msg:'1일이 지났네요'};
+      case 2:
+        return {icon:'custom-serious', msg:'2일이 지났네요'};
+      default:
+        return {icon:'custom-crying', msg:'3일 이상 지났네요'};
+
+    }
+  }
+
+  speechCommand(string) {
+    this.tts.speak({
+      text:string,
+      locale: 'ko-KR',
+      rate: 1.5,
+    });
+  }
+
+  toggleRepush(item) {
+    let repush = item.repush ? 0 : 1;
+    this.serv.putRepushAssign(item.idSBJTS, repush)
+    .then(obj=>{
+      item.repush = repush;
+    })
+    .catch(msg=>{
+      this.serv.msgServ(msg);
+    })
+  }
+
+  moveAssignPage(item) {
+    item.scroll = this.lastAssignContentScroll;
+    this.navCtrl.push(AssignPage, item);
+  }
+
+  // toggleCalender() {
+  //   this.isViewCalendar = false;
+  // }
+
+  selectCalenderDate(date) {
+    this.isViewCalendar = false;
+    this.setCuDate(date);
+  }
+
+  // ionViewDidLeave() {
+  //   console.log('leave')
+  //   this.dateScroll$.unsubscribe();
+  //   this.assignContent$.unsubscribe();
+  // }
+
+}

@@ -1,0 +1,22 @@
+page-main {
+
+
+  .tabs-ios .tab-button[aria-selected=true],
+  .tabs-md .tab-button[aria-selected=true] {
+    color: color($colors, gray_darken);
+  }
+
+  .tabs-md .tab-button[aria-selected=true] .tab-button-icon,
+  .tabs-ios .tab-button[aria-selected=true] .tab-button-icon {
+    color: color($colors, bluish_green);
+    opacity: 1;
+    -webkit-transition: opacity .5s;
+  }
+
+  .tabs-md .tab-button[aria-selected=false] .tab-button-icon,
+  .tabs-ios .tab-button[aria-selected=false] .tab-button-icon {
+    opacity: .5;
+    -webkit-transition: opacity .5s;
+  }
+
+}

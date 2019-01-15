@@ -1,0 +1,333 @@
+<!--
+  Generated template for the AssignPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title *ngIf="params.status === 1">과제보기</ion-title>
+    <ion-title *ngIf="params.status === 0">과제하기</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content class="back">
+  <ion-card  *ngIf="params.status === 1" class="card-assigned">
+    <div class="header">
+        <span class="title">수행한 과제</span>
+        <span class="push-date">
+          {{params.PUSH_TIME | date : 'yyyy년 MM월 dd일' }}<br>
+          {{params.PUSH_TIME | date : 'hh시 mm분'}}
+        </span>
+        <br>
+        <br>
+    </div>
+    <ion-card-content class="content">
+      <ion-icon name="custom-love" [style.zoom]="3.0"></ion-icon>
+      <span class="subscribe">
+        {{ params.FINISHED_TIME | date : 'yyyy년 MM월 dd일' }}에<br>
+        수행한 과제입니다.
+      </span>
+      <br>
+      <br>
+      <p class="command"> {{params.command}} </p>
+      <br>
+      <!-- Simple Answer -->
+
+      <!-- Simple Answer -->
+      <div *ngIf="assign.type_input ===0">
+        <div *ngIf="assign.conf_input_01 === 1" class="answer photo">
+          <div class="">
+            <button class="custom-style add-picture-button" (tap)="openGallary()">
+              <span *ngIf="isPhoto">사진 변경</span>
+              <span *ngIf="!isPhoto">사진 추가</span>
+              <ion-icon name="images"></ion-icon>
+            </button>
+          </div>
+          <canvas id="assign-img" height="0">
+            <br>
+            <div class="spinner"><ion-spinner name="circles" *ngIf="!photoLoaded"></ion-spinner></div>
+          </canvas>
+        </div>
+        <div *ngFor="let text of answer; let idx = index">
+          <ion-textarea autosize  class="answer" placeholder="항목 {{idx+1}} 번"
+          [(ngModel)]="tableResult[idx]['text']" [ngModelOptions]="{standalone: true}">
+          </ion-textarea>
+        </div>
+      </div>
+      <div class="answer" *ngIf="assign.type_input === 5 || assign.type_input === 3 || assign.type_input === 4 || assign.type_input === 2">
+        <ion-row *ngFor="let row of table; let r = index" class="table-row" [ngClass]=" r == 0 ? 'table-header' : ''">
+          <ion-col *ngFor="let col of row; let c = index">
+            <div *ngIf="r==0 && c==0"></div>
+
+            <div *ngIf="r==0 || c==0 && (assign.type_input === 5)">{{col}}</div>
+            <div *ngIf="r>0 && c==0 && assign.type_input === 3">{{col | date:'hh:mm a'}}</div>
+            <div *ngIf="(c==0 && r!=0) && (assign.type_input === 4 || assign.type_input === 2)">
+              <ion-input type="text" placeholder="텍스트 입력"
+              [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+              ></ion-input>
+            </div>
+            <span *ngIf="r!=0">
+              <span *ngIf="col === 0">
+                <ion-input type="text" placeholder="텍스트 입력"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                ></ion-input>
+              </span>
+              <span *ngIf="col === 1">
+                <ion-input type="tel" pattern="[0-9]*" placeholder="숫자입력"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                ></ion-input>
+              </span>
+              <span *ngIf="col === 2">
+                <ion-select placeholder="감정 선택" class="table-select"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                >
+                  <ion-option *ngFor="let emo of fm.emotion">{{emo}}</ion-option>
+                </ion-select>
+              </span>
+              <span *ngIf="col === 3">
+                <ion-select placeholder="활동 선택" class="table-select"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                >
+                  <ion-option *ngFor="let act of fm.activity">{{act}}</ion-option>
+                </ion-select>
+              </span>
+              <span *ngIf="col === 4">
+                <ion-input type="text" [(emojiPickerIf)]="emojiPickerView" placeholder="이모티콘 입력"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                (ionFocus)="emojiFocus();"
+                (emojiPickerSelect)="emojiSelect(r, c, $event)"
+                ></ion-input>
+              </span>
+              <span *ngIf="col === 5">
+                <ion-select placeholder="O/X 선택" class="table-select"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                >
+                  <ion-option *ngFor="let tf of fm.trueFalse">{{tf}}</ion-option>
+                </ion-select>
+              </span>
+            </span>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <!-- Survey Answer -->
+      <div class="" *ngIf="params.type===1" class="answer">
+        <div class="title"> {{ survey.title }} </div>
+        <br>
+        해당 설문은 이미 완료하신 설문입니다! <br>
+        설문에 응해 주셔서 감사합니다.
+      </div>
+
+      <!-- Lecture -->
+      <div class="" *ngIf="params.type===2" class="answer">
+        <div *ngIf="lecture?.type===1">
+          <ion-slides pager >
+            <ion-slide *ngFor="let page of this.lecture.pages; let idx = index">
+              <pdf-viewer [src]="lecture?.src" [show-all]="false" [fit-to-page]="true" [page]="idx+1" style="display:block;"></pdf-viewer>
+            </ion-slide>
+          </ion-slides>
+        </div>
+        <div *ngIf="lecture?.type===0">
+          <ion-slides paper=true pager>
+            <ion-slide *ngFor="let html of this.lecture.htmls; let idx = index">
+              <div class="">
+                <div class="test2" [innerHTML]="sanitizer.bypassSecurityTrustHtml(html)"></div>
+              </div>
+              <!-- <li class="test2" [innerHTML]="html"></li> -->
+            </ion-slide>
+          </ion-slides>
+        </div>
+      </div>
+    </ion-card-content>
+
+    <ion-row class="card-ctrl">
+      <ion-col>
+        <button ion-button class="custom-style" (tap)="speechCommand(params.command)" icon-left clear small>
+          <ion-icon name="mic" color="light" ></ion-icon>
+          <div>과제듣기</div>
+        </button>
+      </ion-col>
+      <ion-col align-self-center *ngIf="params.status !== 1">
+        <button ion-button class="custom-style"  icon-left  clear small (tap)="putSimpleAnswer()">
+          <ion-icon name="ribbon" color="bluish_green"></ion-icon>
+          <div>과제 재등록</div>
+        </button>
+      </ion-col>
+      <ion-col align-self-center *ngIf="params.status === 1">
+        <button ion-button class="custom-style"  icon-left  clear small (tap)="navCtrl.pop()">
+          <ion-icon name="ribbon" color="bluish_green"></ion-icon>
+          <div>뒤로 가기</div>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
+  <ion-card *ngIf="params.status === 0" class="card-not-assigned">
+    <div class="header">
+      <span class="title">미수행 과제</span>
+      <span class="push-date">
+        {{params.PUSH_TIME | date : 'yyyy년 MM월 dd일' }}<br>
+        {{params.PUSH_TIME | date : 'hh시 mm분'}}
+      </span>
+      <br>
+      <br>
+    </div>
+
+    <ion-card-content class="content">
+      <ion-icon [name]="getElaspedDate(params.PUSH_TIME).icon" [style.zoom]="3.0"></ion-icon>
+      <span class="subscribe">
+        {{ getElaspedDate(params.PUSH_TIME).msg }} <br>
+         이 과제를 수행해 주세요.
+      </span>
+      <br>
+      <br>
+      <p class="command"> {{params.command}} </p>
+      <br>
+
+      <!-- Simple Answer -->
+      <div *ngIf="assign.type_input ===0">
+        <div *ngIf="assign.conf_input_01 === 1" class="answer photo">
+          <div class="">
+            <button class="custom-style add-picture-button" (tap)="openGallary()">
+              <span *ngIf="isPhoto">사진 변경</span>
+              <span *ngIf="!isPhoto">사진 추가</span>
+              <ion-icon name="images"></ion-icon>
+            </button>
+          </div>
+          <canvas id="assign-img" height="0" *ngIf="isPhoto">
+            <br>
+            <div class="spinner"><ion-spinner name="circles" *ngIf="!photoLoaded"></ion-spinner></div>
+          </canvas>
+        </div>
+        <div *ngFor="let text of answer; let idx = index">
+          <ion-textarea autosize  class="answer" placeholder="항목 {{idx+1}} 번"
+          [(ngModel)]="tableResult[idx]['text']" [ngModelOptions]="{standalone: true}">
+          </ion-textarea>
+        </div>
+      </div>
+      <div class="answer" *ngIf="assign.type_input === 5 || assign.type_input === 3 || assign.type_input === 4 || assign.type_input === 2">
+
+        <ion-row *ngFor="let row of table; let r = index" class="table-row" [ngClass]=" r == 0 ? 'table-header' : ''">
+          <ion-col *ngFor="let col of row; let c = index">
+            <div *ngIf="r==0 && c==0"></div>
+
+            <div *ngIf="r==0 || c==0 && (assign.type_input === 5)">{{col}}</div>
+
+            <div *ngIf="(c==0 && r!=0) && (assign.type_input === 4 || assign.type_input === 2)">
+              <ion-input type="text" placeholder="텍스트 입력"
+              [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+              ></ion-input>
+            </div>
+            <div *ngIf="r>0 && c==0 && assign.type_input === 3">{{col | date:'hh:mm a'}}</div>
+
+            <span *ngIf="r!=0">
+              <span *ngIf="col === 0">
+                <ion-input type="text" placeholder="텍스트 입력"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                ></ion-input>
+              </span>
+              <span *ngIf="col === 1">
+                <ion-input type="tel" pattern="[0-9]*" placeholder="숫자입력"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                ></ion-input>
+              </span>
+              <span *ngIf="col === 2">
+                <ion-select placeholder="감정 선택" class="table-select"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                >
+                  <ion-option *ngFor="let emo of fm.emotion">{{emo}}</ion-option>
+                </ion-select>
+              </span>
+              <span *ngIf="col === 3">
+                <ion-select placeholder="활동 선택" class="table-select"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                >
+                  <ion-option *ngFor="let act of fm.activity">{{act}}</ion-option>
+                </ion-select>
+              </span>
+              <span *ngIf="col === 4">
+                <ion-input type="text" [(emojiPickerIf)]="emojiPickerView" placeholder="이모티콘 입력"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                (ionFocus)="emojiFocus();"
+                (emojiPickerSelect)="emojiSelect(r, c, $event)"
+                ></ion-input>
+              </span>
+              <span *ngIf="col === 5">
+                <ion-select placeholder="O/X 선택" class="table-select"
+                [(ngModel)]="tableResult[r][c]" [ngModelOptions]="{standalone: true}"
+                >
+                  <ion-option *ngFor="let tf of fm.trueFalse">{{tf}}</ion-option>
+                </ion-select>
+              </span>
+            </span>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <!-- Survey Answer -->
+      <div class="" *ngIf="params.type===1" class="survey">
+        <div class="title"> {{ survey.title }} </div>
+        <ion-list *ngFor="let item of survey.data; let idx = index" class="obj">
+          <div class="text">{{idx+1}}. {{ item.text }}</div>
+          <ion-range color="bluish_green"
+          min="1" [max]="item.measure"
+          step="1" snaps="true" pin="true"
+          [(ngModel)]="item.result"
+          [ngModelOptions]="{standalone: true}"
+          ></ion-range>
+          <div class="value-text">{{ item.result }}번("{{ survey.texts[item.result - 1] }}")을 선택하셨습니다</div>
+        </ion-list>
+      </div>
+
+    <!-- Lecture -->
+    <div class="" *ngIf="params.type===2" class="answer">
+      <div *ngIf="lecture?.type===0">
+        <ion-slides pager>
+          <ion-slide *ngFor="let html of this.lecture.htmls; let idx = index">
+            <div class="">
+              <div class="test2" [innerHTML]="sanitizer.bypassSecurityTrustHtml(html)"></div>
+            </div>
+            <!-- <li class="test2" [innerHTML]="html"></li> -->
+          </ion-slide>
+        </ion-slides>
+      </div>
+      <div *ngIf="lecture?.type === 1">
+        <ion-slides pager >
+          <ion-slide *ngFor="let page of lecture.pages; let idx = index">
+            <pdf-viewer [src]="lecture?.src" [show-all]="false" [fit-to-page]="true" [page]="idx+1" style="display:block;"></pdf-viewer>
+          </ion-slide>
+        </ion-slides>
+      </div>
+
+    </div>
+    </ion-card-content>
+
+    <ion-row class="card-ctrl">
+      <ion-col>
+        <button ion-button class="custom-style"  icon-left clear small (tap)="speechCommand(params.command)">
+          <ion-icon name="mic"  color="light"></ion-icon>
+          <div>과제듣기</div>
+        </button>
+      </ion-col>
+      <ion-col>
+        <button *ngIf="params.type === 0" ion-button class="custom-style"  icon-left clear small (tap)="putAssignResult()">
+          <ion-icon name="ribbon"  color="vermilion"></ion-icon>
+          <div>작성완료</div>
+        </button>
+
+        <button *ngIf="params.type === 1" ion-button class="custom-style"  icon-left clear small (tap)="postSurveyResult()">
+          <ion-icon name="ribbon"  color="vermilion"></ion-icon>
+          <div>작성완료</div>
+        </button>
+
+        <button *ngIf="params.type === 2" ion-button class="custom-style"  icon-left clear small (tap)="putLectureResult()">
+          <ion-icon name="ribbon"  color="vermilion"></ion-icon>
+          <div>작성완료</div>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
+</ion-content>

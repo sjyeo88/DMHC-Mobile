@@ -1,0 +1,142 @@
+<!--
+  Generated template for the RegisterPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>회원가입</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="register" [formGroup]="fm.reg">
+  <ion-list>
+    <ion-list-header>로그인 정보</ion-list-header>
+    <ion-item>
+      <ion-label color="primary" stacked>이메일 주소<br>(ID로 사용되오니 정확한 이메일 주소를 입력바랍니다)</ion-label>
+      <ion-input formControlName="email" placeholder="회원님의 이메일을 입력해 주세요"></ion-input>
+    </ion-item>
+      <label class="invalid-msg" *ngIf="email.dirty && email.errors?.pattern">{{validMsg.emailLabel.invalid}}</label>
+      <label class="invalid-msg" *ngIf="email.dirty && email.errors?.required">{{validMsg.emailLabel.require}}</label>
+      <label class="invalid-msg" *ngIf="email.dirty && isUser">{{validMsg.emailLabel.invalidPattern}}</label>
+    <div [formGroup]="passwordGroup">
+      <ion-item>
+        <ion-label color="primary" stacked>비밀번호 (숫자, 특수문자, 문자 조합)</ion-label>
+        <ion-input formControlName="password" placeholder="비밀번호를 입력해주세요" type="password"></ion-input>
+      </ion-item>
+      <label class="invalid-msg" *ngIf="password.dirty && password.errors?.required">{{validMsg.passwordLabel.require}}</label>
+      <label class="invalid-msg" *ngIf="password.dirty && password.errors?.pattern">{{validMsg.passwordLabel.invalidPattern}}</label>
+      <label class="invalid-msg" *ngIf="password.dirty && password.errors?.maxlength">{{validMsg.passwordLabel.invalidMax}}</label>
+      <label class="invalid-msg" *ngIf="password.dirty && password.errors?.minlength">{{validMsg.passwordLabel.invalidMin}}</label>
+      <ion-item>
+        <ion-label color="primary" stacked>비밀번호 확인</ion-label>
+        <ion-input formControlName="passwordCheck" placeholder="비밀번호를 다시 입력해주세요" type="password"></ion-input>
+      </ion-item>
+      <label class="invalid-msg" *ngIf="passwordCheck.dirty && passwordGroup.errors?.match">{{validMsg.passwordCheckLabel.invalid}}</label>
+    </div>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header> 비밀번호 찾기 질문/답변 </ion-list-header>
+    <ion-item>
+      <ion-label color="primary"  stacked>질문</ion-label>
+      <ion-select formControlName="password_q">
+        <ion-option value="0">나의 출신 초등학교는?</ion-option>
+        <ion-option value="1">나의 아버지 성함은?</ion-option>
+        <ion-option value="2">나의 어머니 성함은?</ion-option>
+        <ion-option value="3">나의 가장 친한 친구는?</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label color="primary" stacked>
+        답변
+      </ion-label>
+      <ion-input formControlName="password_a" placeholder="위 항목에 대한 답변을 해주세요." type="text"></ion-input>
+    </ion-item>
+    <label class="invalid-msg" *ngIf="password_a.dirty && password_a.errors?.required">입력이 되지 않았습니다.</label>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>회원 정보</ion-list-header>
+    <ion-item>
+      <ion-label stacked color="primary">이름</ion-label>
+      <ion-input formControlName="name" placeholder="회원님의 이름을 입력해주세요" type="text"></ion-input>
+    </ion-item>
+    <label class="invalid-msg" *ngIf="name.dirty && name.errors?.required">입력이 되지 않았습니다.</label>
+    <label class="invalid-msg" *ngIf="name.dirty && name.errors?.maxlength">{{ validMsg.usernameLabel.invalidMax }}</label>
+
+    <ion-item>
+      <ion-label  color="primary" stacked>성별</ion-label>
+      <ion-select formControlName="gender" placeholder="회원님의 성별을 선택해주세요">
+        <ion-option value="0">남성</ion-option>
+        <ion-option value="1">여성</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label color="primary" stacked>생년월일</ion-label>
+      <ion-datetime
+      formControlName="birth"
+      displayFormat="YYYY년 MM월 D일"
+      pickerFormat="YYYY MM D"
+      placeholder="회원님의 생년월일을 입력해주세요"></ion-datetime>
+    </ion-item>
+    <label class="invalid-msg" *ngIf="birth.dirty && birth.errors?.required">입력이 되지 않았습니다.</label>
+
+    <ion-item>
+      <ion-label stacked color="primary">휴대폰 번호<br>("-" 없이 숫자로만 이루어져야 합니다.)</ion-label>
+      <ion-input formControlName="phone" placeholder="휴대폰 번호를 (-)없이 입력해주세요" type="text"></ion-input>
+    </ion-item>
+    <label class="invalid-msg" *ngIf="phone.dirty && phone.errors?.pattern">{{validMsg.phoneNumLabel.invalidPattern}}</label>
+    <label class="invalid-msg" *ngIf="phone.dirty && phone.errors?.maxlength">{{validMsg.phoneNumLabel.invalidMax}}</label>
+    <label class="invalid-msg" *ngIf="phone.dirty && phone.errors?.minlength">{{validMsg.phoneNumLabel.invalidMin}}</label>
+    <label class="invalid-msg" *ngIf="phone.dirty && phone.errors?.required">입력이 되지 않았습니다.</label>
+
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>담당 선생님 정보</ion-list-header>
+    <ion-item>
+      <ion-label class="is-expert" color="primary">미리 지정된 담당 선생님이 있습니다.</ion-label>
+      <ion-checkbox formControlName="isExpert"></ion-checkbox>
+    </ion-item>
+    <div *ngIf="isPreDefinedExpert"  [formGroup]="expertGroup">
+      <ion-item>
+        <ion-label stacked color="primary">담당선생님의 성명을 입력해주세요</ion-label>
+        <ion-input formControlName="expert_name" placeholder="담당 선생님의 이름을 입력해주세요" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="primary" stacked>담당 선생님 소속</ion-label>
+        <ion-select  formControlName="expert_dept" placeholder="담당 선생님의 소속을 입력해주세요">
+          <ion-option *ngFor="let item of dept" [value]="item.idDEPT">{{item.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="primary" stacked>담당 선생님 직종</ion-label>
+        <ion-select  formControlName="expert_job" placeholder="담당 선생님의 직종을 입력해주세요">
+          <ion-option *ngFor="let item of jobs" [value]="item.idJOBS">{{item.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-spinner name="bubbles" *ngIf="isGettingExpert"></ion-spinner>
+      <label class="invalid-msg" *ngIf="!foundExpert && !isGettingExpert">
+        조건을 만족하는 선생님을 찾을 수 없습니다.<br>다시한번 확인해주세요.
+      </label>
+      <label class="valid-msg" *ngIf="foundExpert && !dupEXPERT && !isGettingExpert">조건을 만족하는 선생님을 찾았습니다.</label>
+      <label class="valid-msg" *ngIf="dupEXPERT && !isGettingExpert">
+        조건을 만족하는 선생님이 한 명 이상 있습니다.
+        <br>
+        가입 후 관리자에게 연락바랍니다.
+      </label>
+    </div>
+  </ion-list>
+
+
+  <button ion-button class="submit-button" type="submit" (tap)="submit()">회원가입 완료</button>
+  <img src="assets/imgs/log_foot.png" [style.margin-bottom.px]="50">
+</ion-content>

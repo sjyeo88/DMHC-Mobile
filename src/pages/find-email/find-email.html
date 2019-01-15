@@ -1,0 +1,69 @@
+<!--
+  Generated template for the FindEmailPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>이메일 찾기</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding [formGroup]="fm.fg">
+  <ion-list>
+    <ion-list-header>
+      가입된 이메일 주소를 찾기 위해선 회원님의 이름, 성별,
+      <br>
+      생년월일이 필수적으로 필요합니다.
+    </ion-list-header>
+    <ion-item>
+      <ion-label color="primary" stacked>이름 입력</ion-label>
+      <ion-input formControlName="name" placeholder="회원님의 이름을 입력해 주세요"></ion-input>
+    </ion-item>
+    <label class="invalid-msg" *ngIf="name.dirty && name.errors?.required">입력이 되지 않았습니다.</label>
+    <label class="invalid-msg" *ngIf="name.dirty && name.errors?.maxlength">{{ validMsg.usernameLabel.invalidMax }}</label>
+
+    <ion-item>
+      <ion-label color="primary" stacked>성별 입력</ion-label>
+      <ion-select formControlName="gender">
+        <ion-option value="0">남성</ion-option>
+        <ion-option value="1">여성</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label color="primary" stacked>생년월일 입력</ion-label>
+      <ion-datetime
+      formControlName="birth"
+      displayFormat="YYYY년 MM월 D일"
+      pickerFormat="YYYY MM D"
+      placeholder="회원님의 생년월일을 입력해주세요"></ion-datetime>
+    </ion-item>
+    <label class="invalid-msg" *ngIf="birth.dirty && birth.errors?.required">입력이 되지 않았습니다.</label>
+
+    <ion-item>
+      <ion-label stacked color="primary">휴대폰 번호<br>(필수항목은 아닙니다.)</ion-label>
+      <ion-input formControlName="phone" placeholder="휴대폰 번호를 (-)없이 입력해주세요" type="tel"></ion-input>
+    </ion-item>
+
+    <label class="invalid-msg" *ngIf="phone.dirty && phone.errors?.pattern">{{validMsg.phoneNumLabel.invalidPattern}}</label>
+    <label class="invalid-msg" *ngIf="phone.dirty && phone.errors?.maxlength">{{validMsg.phoneNumLabel.invalidMax}}</label>
+    <label class="invalid-msg" *ngIf="phone.dirty && phone.errors?.minlength">{{validMsg.phoneNumLabel.invalidMin}}</label>
+  </ion-list>
+  <div class="submit-button">
+    <button ion-button (tap)="onFindEmail()">가입된 이메일 주소 찾기</button>
+  </div>
+  <div class="result">
+    <div class="header"> {{resultMsg.header}} </div>
+    <br><br>
+    <li *ngFor = "let msg of resultMsg.list; let i of index" class="email-list">
+      {{ msg }}
+    </li >
+    <br>
+    <div class="footer"> {{resultMsg.footer}} </div>
+  </div>
+</ion-content>

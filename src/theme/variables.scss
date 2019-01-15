@@ -1,0 +1,154 @@
+// Ionic Variables and Theming. For more info, please see:
+// http://ionicframework.com/docs/theming/
+
+// Font path is used to include ionicons,
+// roboto, and noto sans fonts
+$font-path: "../assets/fonts";
+
+
+// The app direction is used to include
+// rtl styles in your app. For more info, please see:
+// http://ionicframework.com/docs/theming/rtl-support/
+$app-direction: ltr;
+
+
+@import "ionic.globals";
+
+
+// Shared Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass variables found in Ionic's source scss files.
+// To view all the possible Ionic variables, see:
+// http://ionicframework.com/docs/theming/overriding-ionic-variables/
+
+
+
+
+// Named Color Variables
+// --------------------------------------------------
+// Named colors makes it easy to reuse colors on various components.
+// It's highly recommended to change the default colors
+// to match your app's branding. Ionic uses a Sass map of
+// colors so you can add, rename and remove colors as needed.
+// The "primary" color is the only required color in the map.
+
+$colors: (
+  primary:    #94282C,
+  secondary:  #32db64,
+  danger:     #D55E00,
+  light:      #00a3FF,
+  dark:       #222,
+  white: #FFFFFF,
+  black: #000000,
+  gray_darken: #4A4A4A,
+  gray_mid: #979797,
+  gray_light: #c4c4c4,
+  gray_bright: #F1F1F1,
+  crimson: #94282C,
+  bluish_green: #009E73,
+  bluish_green-blur: rgba(0, 158, 115, .5),
+  light_blue: #008cff,
+  vermilion: #D55E00,
+  gold: #ffc700,
+  vanilla: #ffeeb3,
+
+);
+
+
+// App iOS Variables
+// --------------------------------------------------
+// iOS only Sass variables can go here
+
+
+
+
+// App Material Design Variables
+// --------------------------------------------------
+// Material Design only Sass variables can go here
+
+
+
+
+// App Windows Variables
+// --------------------------------------------------
+// Windows only Sass variables can go here
+
+
+
+
+// App Theme
+// --------------------------------------------------
+// Ionic apps can have different themes applied, which can
+// then be future customized. This import comes last
+// so that the above variables are used and Ionic's
+// default are overridden.
+
+@import "ionic.theme.default";
+
+
+// Ionicons
+// --------------------------------------------------
+// The premium icon font for Ionic. For more info, please see:
+// http://ionicframework.com/docs/ionicons/
+
+@import "ionic.ionicons";
+
+ion-icon {
+  &[class*="custom-"] {
+    mask-size: contain;
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background: currentColor;
+    width: 1em;
+    height: 1em;
+  }
+
+  &[class*="custom-love"] {
+    content: url(../assets/icon/if_10_smiley_2639059.svg);
+    background-color: transparent;
+  }
+
+  &[class*="custom-hesitate"] {
+    content: url(../assets/icon/if_12_smiley_2639061.svg);
+    background-color: transparent;
+  }
+
+  &[class*="custom-kiss"] {
+    content: url(../assets/icon/if_14_smiley_2639063.svg);
+    background-color: transparent;
+  }
+
+  &[class*="custom-smile"] {
+    content: url(../assets/icon/if_15_smiley_2639064.svg);
+    background-color: transparent;
+  }
+
+  &[class*="custom-crying"] {
+    content: url(../assets/icon/if_16_smiley_2639065.svg);
+    background-color: transparent;
+  }
+
+  &[class*="custom-serious"] {
+    content: url(../assets/icon/if_18_smiley_2639067.svg);
+    background-color: transparent;
+  }
+
+  &[class*="custom-serious-sad"] {
+    content: url(../assets/icon/if_21_smiley_2639071.svg);
+    background-color: transparent;
+  }
+
+  &[class*="custom-surprise"] {
+    content: url(../assets/icon/if_22_smiley_2639072.svg);
+    background-color: transparent;
+  }
+
+}
+
+
+// Fonts
+// --------------------------------------------------
+
+@import "roboto";
+@import "noto-sans";

@@ -1,0 +1,77 @@
+page-assign-result {
+  .assign-result {
+    background-color: color($colors, gray_bright);
+    @mixin result-card($gradient) {
+      .result-header {
+        text-align: center;
+        // font-weight: bold;
+        font-family: 'NanumBarunGothicOTF';
+        color: white;
+        background-image: $gradient;
+      }
+
+      .result-content {
+        padding: 13px 13px;
+        font-size: 16px;
+        .ratio {
+          margin: 5px;
+          text-align: right;
+          .percentage {
+            font-size: 48px;
+          }
+        }
+        hr {
+          height: 1.2px;
+          background-color: color($colors, gray_light);
+        }
+      }
+
+      li {
+        list-style: none;
+        font-size: 16px;
+        ion-icon {
+          margin: 4px 5px;
+          vertical-align:top;
+        }
+      }
+
+      div.text-with-icon {
+        margin: 5px 0px;
+        list-style: none;
+        font-size: 16px;
+        ion-icon {
+          margin: 4px 5px;
+          vertical-align:top;
+        }
+        div {
+          text-align: right;
+          float: right;
+          display: inline-block;
+          span {
+            font-size: 20px;
+          }
+        }
+      }
+      .move-month {
+        padding: 0 20px;
+        color: white;
+        vertical-align: middle;
+      }
+    }
+    .result-card-all {
+      @include result-card(linear-gradient(98deg, #3023ae, #53a0fd));
+    }
+
+    .result-card-survey {
+      @include result-card(linear-gradient(98deg, #3023ae, #c86dd7));
+      .survey-chart {
+        width: 100%;
+        min-height: 300px;
+      }
+    }
+
+    .result-card-monthly {
+      @include result-card(linear-gradient(98deg, #3023ae, #53a0fd));
+    }
+  }
+}

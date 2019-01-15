@@ -1,0 +1,161 @@
+<!--
+  Generated template for the AssignTodayPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border class="header">
+  <ion-toolbar>
+    <ion-title>오늘의 과제</ion-title>
+  </ion-toolbar>
+  <ion-toolbar no-border class="month-selector">
+      <button type="button" class="custom-style move-month" (tap)="prevMonth()">
+       <ion-icon name="arrow-back"></ion-icon>
+      </button>
+      <span class="month-text">{{cuDate | date: 'yyyy 년 MM 월'}} </span>
+      <button type="button" class="custom-style move-month" (tap)="nextMonth()">
+         <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+      <button type="button" class="custom-style view-calander" (tap)="viewCalendar()">
+        <ion-icon name="md-calendar" class="view-calander" ></ion-icon>
+      </button>
+  </ion-toolbar>
+
+  <div no-border  [ngClass]="isDatePicker ? 'data-picker' : 'shrink'">
+    <ion-scroll #date_scroll scrollX="true" [ngClass]="isDatePicker ? '' : 'shrink'">
+      <li *ngFor="let item of dates" class="date-scroll-item">
+        <div *ngIf="item.getTime() === today.getTime()" class="today">
+          <ion-icon name="star"></ion-icon>
+        </div>
+        <div class="date"> {{item.getDate()}} </div>
+        <div> {{ getDayString(item.getDay()) }} </div>
+      </li>
+    </ion-scroll>
+    <ion-scroll scrollY="true" [ngClass]="isViewCalendar ? 'calendar' : 'fade-calendar'">
+      <table>
+        <th>일</th>
+        <th>월</th>
+        <th>화</th>
+        <th>수</th>
+        <th>목</th>
+        <th>금</th>
+        <th>토</th>
+        <tr *ngFor="let week of calendarModel;">
+          <td *ngFor="let day of week"  [ngClass]="day?.valid ? '' : 'blur'">
+            <button class="custom-style" [style.color]="getDayColor(day?.date.getDay())" [ngClass]="day?.date.getTime() === today.getTime() ? 'today' : ''"
+            [class]="day?.date.getTime() === cuDate.getTime() ? 'selected' : ''" (tap)="selectCalenderDate(day?.date)">
+              <span class="date">{{ day?.date.getDate() }}</span>
+              <br>
+              <ion-icon
+                *ngIf="day?.finished !== undefined && day?.finished"
+                name="custom-love"
+                [style.zoom]="1.0">
+              </ion-icon>
+              <ion-icon
+                *ngIf="day?.finished !== undefined && !day?.finished "
+                name="custom-crying"
+                [style.zoom]="1.0">
+              </ion-icon>
+              <ion-icon
+                *ngIf="day?.finished === undefined"
+                [ngClass]="'hidden'"
+                name="custom-crying"
+                [style.zoom]="1.0">
+              </ion-icon>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </ion-scroll>
+  </div>
+</ion-header>
+
+<ion-content #assign_content class="assign-today">
+  <div class="loader" *ngIf="!assignLoaded">
+    <ion-spinner name="bubbles" [style.zoom]="5.0"></ion-spinner>
+  </div>
+  <ion-card *ngIf="todayAssigns.length === 0 && assignLoaded" class="no-assign">
+    <ion-icon name="custom-surprise" [style.zoom]="5.0"></ion-icon>
+    <div><br>이런!<br>오늘은 아직 일일 과제가 없네요.<br>잠시만 기다려주시면 과제가 제시됩니다!</div>
+  </ion-card>
+  <ion-card *ngFor="let item of todayAssigns">
+    <div *ngIf="item.status == 0" class="card-not-assigned">
+      <ion-item class="header">
+          <span class="title">미수행 과제</span>
+          <span class="push-date">
+            {{ item.PUSH_TIME | date : 'yyyy년 MM월 dd일' }}<br>
+            {{ item.PUSH_TIME | date : 'hh시 mm분'}}
+          </span>
+      </ion-item>
+      <ion-card-content class="content">
+        <ion-icon [name]="getElaspedDate(item.PUSH_TIME).icon" [style.zoom]="3.0"></ion-icon>
+        <span class="subscribe">
+          {{ getElaspedDate(item.PUSH_TIME).msg }} <br>
+           이 과제를 수행해 주세요.
+        </span>
+        <br>
+        <br>
+        <p class="command"> {{item.command}} </p>
+      </ion-card-content>
+      <ion-row class="card-ctrl">
+      <ion-col>
+        <button ion-button class="custom-style"  icon-left clear small (tap)="speechCommand(item.command)">
+          <ion-icon name="mic"  color="light"></ion-icon>
+          <div>과제듣기</div>
+        </button>
+      </ion-col>
+      <ion-col>
+        <button ion-button class="custom-style"  icon-left clear small (tap)="moveAssignPage(item)">
+          <ion-icon name="ribbon"  color="bluish_green"></ion-icon>
+          <div>과제하기</div>
+        </button>
+      </ion-col>
+      <!-- <ion-col center text-center>
+        <button ion-button *ngIf="item.repush" (tap)="toggleRepush(item)" icon-left clear small >
+          <ion-icon name="alarm"></ion-icon>
+          <div>알림끄기</div>
+        </button>
+        <button ion-button *ngIf="!item.repush" class="blur" (tap)="toggleRepush(item)" icon-left clear small >
+          <ion-icon name="alarm"></ion-icon>
+          <div>알림켜기</div>
+        </button>
+      </ion-col> -->
+      </ion-row>
+    </div>
+
+    <div *ngIf="item.status == 1" class="card-assigned">
+      <ion-item class="header">
+          <span class="title">수행한 과제</span>
+          <span class="push-date">
+            {{item.PUSH_TIME | date : 'yyyy년 MM월 dd일' }}<br>
+            {{item.PUSH_TIME | date : 'hh시 mm분'}}
+          </span>
+      </ion-item>
+      <ion-card-content class="content">
+        <ion-icon name="custom-love" [style.zoom]="3.0"></ion-icon>
+        <span class="subscribe">
+          {{ item.FINISHED_TIME | date : 'yyyy년 MM월 dd일' }}에<br>
+          <!-- {{ item.FINISHED_TIME }} 에<br> -->
+          수행한 과제입니다.
+        </span>
+        <br>
+        <br>
+        <p class="command"> {{item.command}} </p>
+      </ion-card-content>
+      <ion-row class="card-ctrl">
+        <ion-col>
+          <button ion-button class="custom-style" (tap)="speechCommand(item.command)" icon-left clear small>
+            <ion-icon name="mic" color="light" ></ion-icon>
+            <div>과제듣기</div>
+          </button>
+        </ion-col>
+        <ion-col align-self-center>
+          <button ion-button class="custom-style"  icon-left  clear small (tap)="moveAssignPage(item)">
+            <ion-icon name="ribbon" color="bluish_green"></ion-icon>
+            <div>과제보기</div>
+          </button>
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-card>
+</ion-content>

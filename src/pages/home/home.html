@@ -1,0 +1,32 @@
+<!-- <ion-header>
+  <ion-navbar>
+    <ion-title>
+      Ionic Blank
+    </ion-title>
+  </ion-navbar>
+</ion-header> -->
+
+<ion-content id="index">
+  <img class="log-img" src="assets/imgs/mainPic.svg">
+  <img class="logo" src="assets/imgs/logo.svg">
+  <div class="log-ctrl" [formGroup]="fm.log">
+    <ion-item class="log-input">
+      <ion-label floating>이메일을 입력해주세요.</ion-label>
+      <ion-input formControlName="email" type="text"></ion-input>
+    </ion-item>
+
+    <ion-item class="log-input">
+      <ion-label floating>비밀번호를 입력해주세요.</ion-label>
+      <ion-input  formControlName="password" type="password"></ion-input>
+    </ion-item>
+    <br>
+    <br>
+    <button ion-button [style.width.vw]="80" (click)="login()">로그인</button>
+    <button ion-button [style.width.vw]="80" (click)="goAccessTerm()">회원가입</button>
+  </div>
+  <div class="">
+  <span (click)="goFindEmail()">이메일 주소 찾기</span> |
+  <span (click)="goFindPassword()">비밀번호 찾기</span>
+  </div>
+  <img class="footer" src="assets/imgs/log_foot.svg">
+</ion-content>

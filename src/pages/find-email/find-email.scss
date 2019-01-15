@@ -1,0 +1,44 @@
+page-find-email {
+
+  ion-list-header {
+    font-size: 14pt;
+    font-weight: bold;
+  }
+
+  .submit-button {
+    text-align: center;
+  }
+
+  .result {
+    font-size: 9pt;
+    margin-top: 20px;
+    text-align: center;
+    .header {
+      font-size: 10pt;
+    }
+    .email-list {
+      font-size: 10pt;
+      text-align: left;
+      font-weight: bold;
+    }
+    padding: 5px;
+    .footer {
+      text-align: left;
+    }
+    // background-color: color($colors, bluish_green-blur);
+  }
+
+  @mixin validator-msg($text-color) {
+    margin: 2px 5px;
+    color: color($colors, $text-color);
+    text-align: right;
+    float: right;
+  }
+  .valid-msg {
+    @include validator-msg(bluish_green);
+  }
+
+  .invalid-msg {
+    @include validator-msg(vermilion);
+  }
+}
